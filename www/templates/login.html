@@ -1,0 +1,25 @@
+<div ng-controller="quizCtrl as quiz">
+
+    <ion-pane>
+        <div class="bar bar-header bar-dark">
+            <h1 class="title">Quiz_Era</h1>
+        </div>
+
+        <ion-content class="has-header style1">
+            <div class="list">
+                <label class="item item-input style1">
+       <input type="text" placeholder="Username">
+      </label>
+                <label class="item item-input style1">
+        <input type="Password" placeholder="Password">
+      </label>
+            </div>
+            <div padding>
+                <button class="button button-positive button-block" full>Login</button>
+                <button ng-click="quiz.loginwithgoogle()" class="button button-assertive ion-social-google button-block" full>  Login with Google</button>
+            </div>
+</div>
+</ion-content>
+
+</ion-pane>
+</div>

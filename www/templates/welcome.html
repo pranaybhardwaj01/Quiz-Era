@@ -1,0 +1,19 @@
+<div ng-controller="welcomeCtrl as welcome">
+    <ion-pane>
+      <div class="bar bar-header bar-dark">
+              <button class="button button-icon icon ion-navicon"></button>
+            <div class="h1 title">Quiz_Era</div>
+               <button class="button button-clear button-icon icon ion-power"></button>
+         </div>
+        <ion-con
+     </div>
+        <ion-content class="has-header style1">
+            <h2> Hello </h2>
+            <h3>{{welcome.displayName}}</h3>
+            <img src={{welcome.imageURL}} alt="profile picture" style="margin:10px; width:100px;height:100px;border-radius:30px" align="middle"></img>
+            <br>
+            <button class="button button-calm" style="margin-left:auto;margin-right:auto;display:block;margin-top:2%;margin-bottom:50%" ng-click="welcome.startgame()">Start</button>
+        
+        </ion-content>
+    </ion-pane>
+</div>
