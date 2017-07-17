@@ -7,3 +7,30 @@ background-position: top center !important;
 background-repeat: no-repeat !important;
 background-attachment: fixed;
 }
+.style2{
+    background-image: url(home_bck.png);
+    -moz-background-size: cover;
+-webkit-background-size: cover;
+background-size: cover;
+background-position: top center !important;
+background-repeat: no-repeat !important;
+background-attachment: fixed;
+}
+.style3{
+    background-image: url(sidemenu.jpg);
+    -moz-background-size: cover;
+-webkit-background-size: cover;
+background-size: cover;
+background-position: top center !important;
+background-repeat: no-repeat !important;
+background-attachment: fixed;
+}
+.style4{
+    background-image: url(grey.svg);
+    -moz-background-size: cover;
+-webkit-background-size: cover;
+background-size: cover;
+background-position: top center !important;
+background-repeat: no-repeat !important;
+background-attachment: fixed;
+}

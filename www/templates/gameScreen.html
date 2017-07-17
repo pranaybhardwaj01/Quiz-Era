@@ -1,0 +1,19 @@
+<ion-view view-title="Quiz Era">
+    <ion-content class=" style4">
+        <div class="bar-assertive bar bar-header " style='margin:5px; height :80px'>
+            <a class="item-avatar">
+                <img src="{{play.imgURL}}" alt="player-avatar-view">
+                <p>0</p>
+            </a>
+
+
+            <h1 class='title' align="right"> {{play.name}} </h1>
+            <div class="card">
+                <div class="item item-text-wrap style3" style="height:70px;width:40px" align="right"></div>
+            </div>
+        </div>
+        <div ng-repeat=" question in play.questions">
+            <h2> {{question.title}}</h2>
+        </div>
+    </ion-content>
+</ion-view>
