@@ -83,10 +83,15 @@ quizing
                 params: { 'genre': null, 'logo': null },
                 templateUrl: '/templates/gameScreen.html',
                 controller: 'gamePlayCtrl',
-                controllerAs: 'play'
+                controllerAs: 'play',
+                 resolve: {
+                    result: function($stateParams, $firebaseArray) {
+                        var questionArray = firebase.database().ref('tasks').child($stateParams.genre);
+                        return $firebaseArray(questionArray).$loaded();
 
+                    }
 
-
+                 }
 
 
             })
@@ -187,17 +192,53 @@ quizing
         }
 
     })
-    .controller('gamePlayCtrl', function($state, userData, $stateParams, $firebaseArray) {
+.controller('gamePlayCtrl', function($state, userData, $stateParams, result, $interval) {
         var play = this;
+        play.score = 0;
         play.logo = $stateParams.logo;
         play.name = $stateParams.genre;
         play.userName = userData.userName;
         play.imgURL = userData.img;
-        var questionArray = firebase.database().ref('tasks').child($stateParams.genre);
-        $firebaseArray(questionArray)
-            .$loaded(function(result) {
-                console.log(result.length);
-            })
+        play.clickStatus = false;
+        var op = [];
+
+        function exists(arr, index) {
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i] == index) {
+                    return true;
+                } else {
+                    return false;
+                }
+
+            }
+        }
+
+        play.que = result[Math.floor(Math.random() * result.length)];
+        for (var i = 0; i < 4; i++) {
+            op.push(play.que.options[i]);
+        }
+        play.o = op;
+
+        play.clicked = function(option) {
+            play.clickStatus = true;
+            if (option.status == 'correct') {
+                play.score += 10;
+            }
+
+            $interval(nextQuestion, 1000, 1);
+
+        }
+        var nextQuestion = function() {
+            play.clickStatus = false;
+            op = [];
+            play.que = result[Math.floor(Math.random() * result.length)];
+
+            for (var i = 0; i < 4; i++) {
+                op.push(play.que.options[i]);
+            }
+            play.o = op;
+        }
+
 
 
     })
