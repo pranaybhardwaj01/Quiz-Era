@@ -110,12 +110,14 @@ quizing
         // if none of the above states are matched, use this as the fallback
         $urlRouterProvider.otherwise('/login');
     })
-    .controller("quizCtrl", function($firebaseAuth, userData, $state) {
+    .controller("quizCtrl", function($firebaseArray, $firebaseAuth, userData, $state) {
         var quiz = this;
         var auth = $firebaseAuth();
         quiz.userName = userData.userName;
         quiz.imgURL = userData.img;
         quiz.loginwithgoogle = loginwithgoogle;
+        var userref = firebase.database().ref("Users");
+        var users = $firebaseArray(userref);
 
         function loginwithgoogle($location) {
 
@@ -123,11 +125,23 @@ quizing
 
 
             promise.then(function(result) {
-                    console.log("Signed in as:", result.user.displayName);
-
+                    flaguser=true;
                     userData.userName = result.user.displayName;
                     userData.img = result.user.photoURL;
-
+                    var obj={};
+                    obj.name=result.user.displayName;
+                    obj.img=result.user.photoURL;
+                    obj.email=result.user.email;
+                    for(i=0;i<users.length;i++)
+                    {
+                        if(result.user.email==users[i].email)
+                        {
+                            flaguser=false;
+                        }
+                    }
+                    if(flaguser)
+                     users.$add(obj);
+                    console.log(users);
                     $state.go('app.welcome');
 
                 })
@@ -135,7 +149,7 @@ quizing
                     console.error("Authentication failed:", error);
                 });
         }
-        console.log(userData.userName, userData.img);
+        
     })
     .controller("welcomeCtrl", function(userData, $state) {
 
