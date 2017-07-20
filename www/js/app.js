@@ -132,6 +132,8 @@ quizing
                     obj.name=result.user.displayName;
                     obj.img=result.user.photoURL;
                     obj.email=result.user.email;
+                     obj.score=0;
+                    obj.category="None";
                     for(i=0;i<users.length;i++)
                     {
                         if(result.user.email==users[i].email)
