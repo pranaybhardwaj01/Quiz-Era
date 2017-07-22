@@ -233,8 +233,6 @@ quizing
             index = Math.floor(Math.random() * result.length);
             play.que = result[index];
             result.splice(index, 1);
-
-
             for (var i = 0; i < 4; i++) {
                 var k = Math.floor(Math.random() * play.que.options.length);
                 var temp = play.que.options[k];
