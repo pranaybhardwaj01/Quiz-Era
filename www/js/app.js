@@ -41,13 +41,13 @@ quizing
             .state('login', {
                 url: '/login',
 
-                templateUrl: '/templates/login.html',
+                templateUrl: 'templates/login.html',
                 controller: 'quizCtrl'
 
             })
             .state('app', {
                 url: '/app',
-                templateUrl: '/templates/appMenu.html',
+                templateUrl: 'templates/appMenu.html',
                 abstract: true,
                 controller: 'quizCtrl',
                 controllerAs: 'quiz'
@@ -57,7 +57,7 @@ quizing
                     url: '/welcome',
                     views: {
                         'menuContent': {
-                            templateUrl: '/templates/welcome.html',
+                            templateUrl: 'templates/welcome.html',
                             controller: 'welcomeCtrl',
                             controllerAs: 'welcome'
                         }
@@ -69,7 +69,7 @@ quizing
                     url: '/gameHome',
                     views: {
                         'menuContent': {
-                            templateUrl: '/templates/gameHome.html',
+                            templateUrl: 'templates/gameHome.html',
                             controller: 'gameSelectCtrl',
                             controllerAs: 'game'
 
@@ -81,26 +81,28 @@ quizing
             .state('game', {
                 url: 'game/play',
                 params: { 'genre': null, 'logo': null },
-                templateUrl: '/templates/gameScreen.html',
+                templateUrl: 'templates/gameScreen.html',
                 controller: 'gamePlayCtrl',
+                cache: false,
                 controllerAs: 'play',
-                 resolve: {
+                resolve: {
                     result: function($stateParams, $firebaseArray) {
                         var questionArray = firebase.database().ref('tasks').child($stateParams.genre);
                         return $firebaseArray(questionArray).$loaded();
 
                     }
 
-                 }
+                }
 
 
             })
             .state('app.gameWelcome', {
                 url: 'app/game/start',
+                cache: false,
                 params: { 'index': null, 'anotherKey': null },
                 views: {
                     'menuContent': {
-                        templateUrl: '/templates/gameStart.html',
+                        templateUrl: 'templates/gameStart.html',
                         controller: 'launchCtrl',
                         controllerAs: 'launch'
                     }
@@ -125,24 +127,22 @@ quizing
 
 
             promise.then(function(result) {
-                    flaguser=true;
+                    flaguser = true;
                     userData.userName = result.user.displayName;
                     userData.img = result.user.photoURL;
-                    var obj={};
-                    obj.name=result.user.displayName;
-                    obj.img=result.user.photoURL;
-                    obj.email=result.user.email;
-                     obj.score=0;
-                    obj.category="None";
-                    for(i=0;i<users.length;i++)
-                    {
-                        if(result.user.email==users[i].email)
-                        {
-                            flaguser=false;
+                    var obj = {};
+                    obj.name = result.user.displayName;
+                    obj.img = result.user.photoURL;
+                    obj.email = result.user.email;
+                    obj.score = 0;
+                    obj.category = "None";
+                    for (i = 0; i < users.length; i++) {
+                        if (result.user.email == users[i].email) {
+                            flaguser = false;
                         }
                     }
-                    if(flaguser)
-                     users.$add(obj);
+                    if (flaguser)
+                        users.$add(obj);
                     console.log(users);
                     $state.go('app.welcome');
 
@@ -151,7 +151,7 @@ quizing
                     console.error("Authentication failed:", error);
                 });
         }
-        
+
     })
     .controller("welcomeCtrl", function(userData, $state) {
 
@@ -180,27 +180,8 @@ quizing
         this.userName = userData.userName;
         this.imageUrl = userData.img;
         console.log($stateParams);
-        switch ($stateParams.index) {
-            case 'friends':
-                this.gameLogo = '../img/friendsLogo.jpg'
-                this.name = 'FRIENDS'
-                break;
-            case 'ac':
-                this.gameLogo = '../img/assassinLogo.jpg'
-                this.name = 'Assassins Creed'
-                break;
-            case 'hp':
-                this.gameLogo = '../img/harryLogo.jpg'
-                this.name = 'Harry Potter'
-                break;
-            case 'cosmos':
-                this.gameLogo = '../img/cosmosLogo.jpg'
-                this.name = 'Cosmos: A space time Odesseys'
-                break;
 
-            default:
-                this.name = $stateParams.index;
-        }
+        this.name = $stateParams.index;
         this.click = function() {
 
             //console.log(this.gameLogo);
@@ -208,8 +189,9 @@ quizing
         }
 
     })
-.controller('gamePlayCtrl', function($state, userData, $stateParams, result, $interval) {
+    .controller('gamePlayCtrl', function($state, userData, $stateParams, result, $interval) {
         var play = this;
+        var count = 0;
         play.score = 0;
         play.logo = $stateParams.logo;
         play.name = $stateParams.genre;
@@ -218,20 +200,18 @@ quizing
         play.clickStatus = false;
         var op = [];
 
-        function exists(arr, index) {
-            for (var i = 0; i < arr.length; i++) {
-                if (arr[i] == index) {
-                    return true;
-                } else {
-                    return false;
-                }
 
-            }
-        }
-
-        play.que = result[Math.floor(Math.random() * result.length)];
+        var index = Math.floor(Math.random() * result.length);
+        play.que = result[index];
+        result.splice(index, 1);
+        count++;
         for (var i = 0; i < 4; i++) {
-            op.push(play.que.options[i]);
+            var k = Math.floor(Math.random() * play.que.options.length);
+            var temp = play.que.options[k];
+            op.push(play.que.options[k]);
+            play.que.options[k] = play.que.options[0];
+            play.que.options[0] = temp;
+            play.que.options.shift();
         }
         play.o = op;
 
@@ -240,18 +220,30 @@ quizing
             if (option.status == 'correct') {
                 play.score += 10;
             }
+            if (count < 6)
+                $interval(nextQuestion, 1000, 1);
 
-            $interval(nextQuestion, 1000, 1);
+            else
+                $state.go('login')
 
         }
         var nextQuestion = function() {
             play.clickStatus = false;
             op = [];
-            play.que = result[Math.floor(Math.random() * result.length)];
+            index = Math.floor(Math.random() * result.length);
+            play.que = result[index];
+            result.splice(index, 1);
+
 
             for (var i = 0; i < 4; i++) {
-                op.push(play.que.options[i]);
+                var k = Math.floor(Math.random() * play.que.options.length);
+                var temp = play.que.options[k];
+                op.push(play.que.options[k]);
+                play.que.options[k] = play.que.options[0];
+                play.que.options[0] = temp;
+                play.que.options.shift();
             }
+            count++;
             play.o = op;
         }
 
