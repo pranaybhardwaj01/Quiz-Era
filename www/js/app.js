@@ -107,6 +107,13 @@ quizing
                         controllerAs: 'launch'
                     }
                 }
+            })
+            .state('endGame', {
+                url: 'app/gameover',
+                params: { 'score': null, 'genre': null },
+                templateUrl: 'templates/lastScreen.html',
+                controller: 'endCtrl',
+                controllerAs: 'end'
             });
 
         // if none of the above states are matched, use this as the fallback
@@ -184,7 +191,7 @@ quizing
         this.name = $stateParams.index;
         this.click = function() {
 
-            //console.log(this.gameLogo);
+
             $state.go('game', { 'genre': this.name });
         }
 
@@ -193,6 +200,9 @@ quizing
         var play = this;
         var count = 0;
         play.score = 0;
+        var timer = 90;
+        var minutes = 0;
+        var sec = 0;
         play.logo = $stateParams.logo;
         play.name = $stateParams.genre;
         play.userName = userData.userName;
@@ -224,9 +234,25 @@ quizing
                 $interval(nextQuestion, 1000, 1);
 
             else
-                $state.go('login')
+                $interval(function() {
+
+                    $state.go('endGame', { 'score': play.score, 'genre': play.name });
+                }, 1000, 1);
 
         }
+        var stop = $interval(function() {
+            timer--;
+            if (timer >= 60) minutes = 1;
+            else minutes = 0;
+            if (timer % 60 < 10) sec = "0" + (timer % 60);
+            else sec = timer % 60;
+
+            play.time = "0" + minutes + ":" + sec;
+            if (timer == 0) {
+                $state.go('endGame', { 'score': play.score, 'genre': play.name });
+                $interval.cancel(stop);
+            }
+        }, 1000)
         var nextQuestion = function() {
             play.clickStatus = false;
             op = [];
@@ -249,4 +275,15 @@ quizing
 
 
 
+    })
+    .controller('endCtrl', function($stateParams, $state) {
+        var end = this;
+        end.score = $stateParams.score;
+        end.genre = $stateParams.genre;
+        end.gameSelect = function() {
+            $state.go('app.gameHome');
+        }
+        end.rematch = function() {
+            $state.go('game', { 'genre': end.genre });
+        }
     })

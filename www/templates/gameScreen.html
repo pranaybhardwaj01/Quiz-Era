@@ -1,20 +1,20 @@
 <ion-view view-title="Quiz Era">
-        <div class="bar bar-header bar-dark" style="margin-bottom:50px">
-            <h3 class="title">{{play.name}}</h3>
+    <div class="bar bar-header bar-dark" style="margin-bottom:50px">
+        <h3 class="title">{{play.name}}</h3>
+    </div>
+    <div class="margin">
+        <h2>{{play.que.title}} </h2>
+        <div>
+            <a ng-class="{'button button-block button-dark':!play.clickStatus , 'button button-block button-balanced':play.clickStatus && play.o[0].status=='correct', 'button button-block button-assertive':play.clickStatus && play.o[0].status=='incorrect'}" ng-click="!play.clickStatus && play.clicked(play.o[0])">{{play.o[0].name}}</a>
+            <a ng-class="{'button button-block button-dark':!play.clickStatus , 'button button-block button-balanced':play.clickStatus && play.o[1].status=='correct','button button-block button-assertive':play.clickStatus && play.o[1].status=='incorrect'}" ng-click="!play.clickStatus && play.clicked(play.o[1])">{{play.o[1].name}}</a>
+            <a ng-class="{'button button-block button-dark':!play.clickStatus , 'button button-block button-balanced':play.clickStatus && play.o[2].status=='correct','button button-block button-assertive':play.clickStatus && play.o[2].status=='incorrect'}" ng-click="!play.clickStatus && play.clicked(play.o[2])">{{play.o[2].name}}</a>
+            <a ng-class="{'button button-block button-dark':!play.clickStatus , 'button button-block button-balanced':play.clickStatus && play.o[3].status=='correct','button button-block button-assertive':play.clickStatus && play.o[3].status=='incorrect'}" ng-click="!play.clickStatus && play.clicked(play.o[3])">{{play.o[3].name}}</a>
         </div>
-        <div class="margin">
-            <h2>{{play.que.title}} </h2>
-            <div>
-                <a ng-class="{'button button-block button-dark':!play.clickStatus , 'button button-block button-balanced':play.clickStatus && play.o[0].status=='correct', 'button button-block button-assertive':play.clickStatus && play.o[0].status=='incorrect'}" ng-click="!play.clickStatus && play.clicked(play.o[0])">{{play.o[0].name}}</a>
-                <a ng-class="{'button button-block button-dark':!play.clickStatus , 'button button-block button-balanced':play.clickStatus && play.o[1].status=='correct','button button-block button-assertive':play.clickStatus && play.o[1].status=='incorrect'}" ng-click="!play.clickStatus && play.clicked(play.o[1])">{{play.o[1].name}}</a>
-                <a ng-class="{'button button-block button-dark':!play.clickStatus , 'button button-block button-balanced':play.clickStatus && play.o[2].status=='correct','button button-block button-assertive':play.clickStatus && play.o[2].status=='incorrect'}" ng-click="!play.clickStatus && play.clicked(play.o[2])">{{play.o[2].name}}</a>
-                <a ng-class="{'button button-block button-dark':!play.clickStatus , 'button button-block button-balanced':play.clickStatus && play.o[3].status=='correct','button button-block button-assertive':play.clickStatus && play.o[3].status=='incorrect'}" ng-click="!play.clickStatus && play.clicked(play.o[3])">{{play.o[3].name}}</a>
-            </div>
-        </div>
-        <div class="bar bar-footer bar-royal">
-            <h3 class="pull-left"> SCORE : {{play.score}}</h3>
-            <div class="title"></div>
-            <button class="button button-clear"></button>
-        </div>
+    </div>
+    <div class="bar bar-footer bar-royal">
+        <h3 class="pull-left"> SCORE : {{play.score}}</h3>
+        <h3 class="title"><i class="icon ion-clock"></i> {{play.time}}</h3>
+        <button class="button button-clear"></button>
+    </div>
 
 </ion-view>
