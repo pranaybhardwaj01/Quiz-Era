@@ -242,10 +242,13 @@ quizing
         }
         var stop = $interval(function() {
             timer--;
-            if (timer >= 60) minutes = 1;
+            if (timer >= 60) 
+            minutes = 1;
             else minutes = 0;
-            if (timer % 60 < 10) sec = "0" + (timer % 60);
-            else sec = timer % 60;
+            if (timer % 60 < 10) 
+            sec = "0" + (timer % 60);
+            else 
+            sec = timer % 60;
 
             play.time = "0" + minutes + ":" + sec;
             if (timer == 0) {
