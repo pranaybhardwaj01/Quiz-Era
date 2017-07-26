@@ -30,6 +30,7 @@ starter
 // Learn more here: https://github.com/angular-ui/ui-router
 // Set up the various states which the app can be in.
 // Each state's controller can be found in controllers.js
+var timer;
 var quizing = angular.module("Quiz", ["firebase", "starter"]);
 quizing
     .factory("userData", function() {
@@ -200,9 +201,10 @@ quizing
         var play = this;
         var count = 0;
         play.score = 0;
-        var timer = 90;
+        timer = 90;
         var minutes = 0;
         var sec = 0;
+        var reset=1000;
         play.logo = $stateParams.logo;
         play.name = $stateParams.genre;
         play.userName = userData.userName;
@@ -235,6 +237,7 @@ quizing
 
             else
                 $interval(function() {
+                    $interval.cancel(stop);
 
                     $state.go('endGame', { 'score': play.score, 'genre': play.name });
                 }, 1000, 1);
@@ -252,8 +255,9 @@ quizing
 
             play.time = "0" + minutes + ":" + sec;
             if (timer == 0) {
-                $state.go('endGame', { 'score': play.score, 'genre': play.name });
                 $interval.cancel(stop);
+                $state.go('endGame', { 'score': play.score, 'genre': play.name });
+                
             }
         }, 1000)
         var nextQuestion = function() {
