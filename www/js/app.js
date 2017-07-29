@@ -163,15 +163,12 @@ quizing
                     if (flaguser)
                         users.$add(obj);
                     console.log(users);
-                console.log(firebaseUser);
                 $state.go("login");
             }).catch(function(error) {
                 console.error("Error: ", error);
             });
 
     }
-
-
      quiz.signIn = function() {
         var promise = auth.$signInWithEmailAndPassword(quiz.signInEmail, quiz.signInPassword);
          console.log("signIN");
@@ -257,7 +254,7 @@ quizing
         var play = this;
         var count = 0;
         play.score = 0;
-        timer = 90;
+        var timer = 90;
         var minutes = 0;
         var sec = 0;
         var reset=1000;
@@ -267,8 +264,6 @@ quizing
         play.imgURL = userData.img;
         play.clickStatus = false;
         var op = [];
-
-
         var index = Math.floor(Math.random() * result.length);
         play.que = result[index];
         result.splice(index, 1);
@@ -333,8 +328,6 @@ quizing
             count++;
             play.o = op;
         }
-
-
 
     })
     .controller('endCtrl', function($stateParams, $state) {
