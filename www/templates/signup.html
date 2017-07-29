@@ -8,16 +8,17 @@
         <ion-content class="has-header style1">
             <div class="list">
                 <label class="item item-input style1">
-       <input type="text" placeholder="Username">
+        <input type="text" placeholder="User Name" ng-model="quiz.signUpName">
       </label>
                 <label class="item item-input style1">
-        <input type="Password" placeholder="Password">
+       <input type="text" placeholder="Email" ng-model="quiz.signUpEmail">
+      </label>
+                <label class="item item-input style1">
+        <input type="Password" placeholder="Password" ng-model="quiz.signUpPassword">
       </label>
             </div>
             <div padding>
-                <button class="button button-positive button-block" full>Login</button>
-                <button ng-click="quiz.loginwithgoogle()" class="button button-assertive ion-social-google button-block" full>  Login with Google</button>
-                <button class="button button-positive button-block" full ng-click="quiz.gosignUp()">Signup</button>
+                <button class="button button-positive button-block" full ng-click="quiz.signUp()">Signup</button>
             </div>
 </div>
 </ion-content>

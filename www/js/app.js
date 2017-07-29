@@ -36,6 +36,9 @@ quizing
     .factory("userData", function() {
         return {};
     })
+    .factory("dataService",function() {
+    return {};
+    })
     .config(function($stateProvider, $urlRouterProvider) {
         $stateProvider
 
@@ -45,6 +48,11 @@ quizing
                 templateUrl: 'templates/login.html',
                 controller: 'quizCtrl'
 
+            })
+            .state('signup',{
+                url: '/signup',
+                templateUrl: 'templates/signup.html',
+                controller: 'quizCtrl'
             })
             .state('app', {
                 url: '/app',
@@ -128,6 +136,61 @@ quizing
         quiz.loginwithgoogle = loginwithgoogle;
         var userref = firebase.database().ref("Users");
         var users = $firebaseArray(userref);
+        quiz.gosignUp=function(){
+            $state.go('signup');
+        }
+
+        quiz.signUp = function() {
+        auth.$createUserWithEmailAndPassword(quiz.signUpEmail, quiz.signUpPassword)
+            .then(function(firebaseUser) {
+                var flaguser =true;
+                var user = firebase.auth().currentUser;
+                user.updateProfile({
+                    displayName: quiz.signUpName,
+                    photoURL: "http://thejonathanfoundation.org/portals/0/GenericProfile.png"
+                });
+                var obj = {};
+                obj.name = quiz.signUpName;
+                obj.img = "http://thejonathanfoundation.org/portals/0/GenericProfile.png";
+                obj.email = firebaseUser.email;
+                obj.score = 0;
+                    obj.category = "None";
+                    for (i = 0; i < users.length; i++) {
+                        if (quiz.signUpEmail == users[i].email) {
+                            flaguser = false;
+                        }
+                    }
+                    if (flaguser)
+                        users.$add(obj);
+                    console.log(users);
+                console.log(firebaseUser);
+                $state.go("login");
+            }).catch(function(error) {
+                console.error("Error: ", error);
+            });
+
+    }
+
+
+     quiz.signIn = function() {
+        var promise = auth.$signInWithEmailAndPassword(quiz.signInEmail, quiz.signInPassword);
+
+        promise
+            .then(function(firebaseUser) {
+                console.log(firebaseUser);
+                dataService.name = firebaseUser.displayName;
+                dataService.photoURL = firebaseUser.photoURL;
+                dataService.email = firebaseUser.email;
+                dataService.uid = firebaseUser.uid;
+
+                console.log(dataService);
+
+                $location.path("/home");
+            }).catch(function(error) {
+                console.error("Authentication failed:", error);
+            });
+    }
+
 
         function loginwithgoogle($location) {
 
