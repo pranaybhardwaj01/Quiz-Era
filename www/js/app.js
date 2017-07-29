@@ -174,18 +174,13 @@ quizing
 
      quiz.signIn = function() {
         var promise = auth.$signInWithEmailAndPassword(quiz.signInEmail, quiz.signInPassword);
-
+         console.log("signIN");
         promise
             .then(function(firebaseUser) {
                 console.log(firebaseUser);
-                dataService.name = firebaseUser.displayName;
-                dataService.photoURL = firebaseUser.photoURL;
-                dataService.email = firebaseUser.email;
-                dataService.uid = firebaseUser.uid;
+                
 
-                console.log(dataService);
-
-                $location.path("/home");
+                $state.go("app.welcome");
             }).catch(function(error) {
                 console.error("Authentication failed:", error);
             });
