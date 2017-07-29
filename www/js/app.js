@@ -178,8 +178,6 @@ quizing
         promise
             .then(function(firebaseUser) {
                 console.log(firebaseUser);
-                
-
                 $state.go("app.welcome");
             }).catch(function(error) {
                 console.error("Authentication failed:", error);
