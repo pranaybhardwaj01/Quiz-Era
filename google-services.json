@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "755619707190",
+    "firebase_url": "https://quiz-era.firebaseio.com",
+    "project_id": "quiz-era",
+    "storage_bucket": "quiz-era.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:755619707190:android:4b211037699c4a06",
+        "android_client_info": {
+          "package_name": "com.quiz.era"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "755619707190-c9lif41gr6rcjnho5i0f9hdb8bgfrk86.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.quiz.era",
+            "certificate_hash": "7fb3f0823625d4808b481b2c8f444b26d9f149a9"
+          }
+        },
+        {
+          "client_id": "755619707190-mb0t6oqael8dvb20jioah8cis7b3aem7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKvKhPy3nFa08M5OHzAb5zMzjFM0xRIvk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "755619707190-mb0t6oqael8dvb20jioah8cis7b3aem7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

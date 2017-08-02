@@ -23,7 +23,11 @@ starter
         if (window.StatusBar) {
             StatusBar.styleDefault();
         }
+        $ionicPlatform.registerBackButtonAction(function(event) {
+            event.preventDefault();
+        }, 100);
     });
+
 });
 
 // Ionic uses AngularUI Router which uses the concept of states
@@ -36,8 +40,8 @@ quizing
     .factory("userData", function() {
         return {};
     })
-    .factory("dataService",function() {
-    return {};
+    .factory("dataService", function() {
+        return {};
     })
     .config(function($stateProvider, $urlRouterProvider) {
         $stateProvider
@@ -49,7 +53,7 @@ quizing
                 controller: 'quizCtrl'
 
             })
-            .state('signup',{
+            .state('signup', {
                 url: '/signup',
                 templateUrl: 'templates/signup.html',
                 controller: 'quizCtrl'
@@ -99,6 +103,9 @@ quizing
                         var questionArray = firebase.database().ref('tasks').child($stateParams.genre);
                         return $firebaseArray(questionArray).$loaded();
 
+                    },
+                    score: function() {
+                        return 90;
                     }
 
                 }
@@ -136,24 +143,24 @@ quizing
         quiz.loginwithgoogle = loginwithgoogle;
         var userref = firebase.database().ref("Users");
         var users = $firebaseArray(userref);
-        quiz.gosignUp=function(){
+        quiz.gosignUp = function() {
             $state.go('signup');
         }
 
         quiz.signUp = function() {
-        auth.$createUserWithEmailAndPassword(quiz.signUpEmail, quiz.signUpPassword)
-            .then(function(firebaseUser) {
-                var flaguser =true;
-                var user = firebase.auth().currentUser;
-                user.updateProfile({
-                    displayName: quiz.signUpName,
-                    photoURL: "http://thejonathanfoundation.org/portals/0/GenericProfile.png"
-                });
-                var obj = {};
-                obj.name = quiz.signUpName;
-                obj.img = "http://thejonathanfoundation.org/portals/0/GenericProfile.png";
-                obj.email = firebaseUser.email;
-                obj.score = 0;
+            auth.$createUserWithEmailAndPassword(quiz.signUpEmail, quiz.signUpPassword)
+                .then(function(firebaseUser) {
+                    var flaguser = true;
+                    var user = firebase.auth().currentUser;
+                    user.updateProfile({
+                        displayName: quiz.signUpName,
+                        photoURL: "http://thejonathanfoundation.org/portals/0/GenericProfile.png"
+                    });
+                    var obj = {};
+                    obj.name = quiz.signUpName;
+                    obj.img = "http://thejonathanfoundation.org/portals/0/GenericProfile.png";
+                    obj.email = firebaseUser.email;
+                    obj.score = 0;
                     obj.category = "None";
                     for (i = 0; i < users.length; i++) {
                         if (quiz.signUpEmail == users[i].email) {
@@ -163,54 +170,69 @@ quizing
                     if (flaguser)
                         users.$add(obj);
                     console.log(users);
-                $state.go("login");
-            }).catch(function(error) {
-                console.error("Error: ", error);
-            });
+                    $state.go("login");
+                }).catch(function(error) {
+                    console.error("Error: ", error);
+                });
 
-    }
-     quiz.signIn = function() {
-        var promise = auth.$signInWithEmailAndPassword(quiz.signInEmail, quiz.signInPassword);
-         console.log("signIN");
-        promise
-            .then(function(firebaseUser) {
-                console.log(firebaseUser);
-                $state.go("app.welcome");
-            }).catch(function(error) {
-                console.error("Authentication failed:", error);
-            });
-    }
+        }
+        quiz.signIn = function() {
+            var promise = auth.$signInWithEmailAndPassword(quiz.signInEmail, quiz.signInPassword);
+            console.log("signIN");
+            promise
+                .then(function(firebaseUser) {
+                    console.log(firebaseUser);
+                    userData.userName = firebaseUser.displayName;
+                    userData.img = firebaseUser.photoURL;
+                    $state.go("app.welcome");
+                }).catch(function(error) {
+                    console.error("Authentication failed:", error);
+                });
+        }
 
 
         function loginwithgoogle($location) {
 
-            var promise = auth.$signInWithPopup("google");
+            // var promise = auth.$signInWithPopup("google");
 
 
-            promise.then(function(result) {
-                    flaguser = true;
-                    userData.userName = result.user.displayName;
-                    userData.img = result.user.photoURL;
-                    var obj = {};
-                    obj.name = result.user.displayName;
-                    obj.img = result.user.photoURL;
-                    obj.email = result.user.email;
-                    obj.score = 0;
-                    obj.category = "None";
-                    for (i = 0; i < users.length; i++) {
-                        if (result.user.email == users[i].email) {
-                            flaguser = false;
-                        }
-                    }
-                    if (flaguser)
-                        users.$add(obj);
-                    console.log(users);
-                    $state.go('app.welcome');
+            window.plugins.googleplus.trySilentLogin({
+                    'scopes': '... ', // optional, space-separated list of scopes, If not included or empty, defaults to `profile` and `email`.
+                    'webClientId': "755619707190-c9lif41gr6rcjnho5i0f9hdb8bgfrk86.apps.googleusercontent.com", // optional clientId of your Web application from Credentials settings of your project - On Android, this MUST be included to get an idToken. On iOS, it is not required.
+                    'offline': true, // optional, but requires the webClientId - if set to true the plugin will also return a serverAuthCode, which can be used to grant offline access to a non-Google server
+                },
+                function(obj) {
+                    console.log(obj); // do something useful instead of alerting
+                },
+                function(msg) {
+                    alert('error: ' + msg);
+                }
+            );
 
-                })
-                .catch(function(error) {
-                    console.error("Authentication failed:", error);
-                });
+            /* promise.then(function(result) {
+                     flaguser = true;
+                     userData.userName = result.user.displayName;
+                     userData.img = result.user.photoURL;
+                     var obj = {};
+                     obj.name = result.user.displayName;
+                     obj.img = result.user.photoURL;
+                     obj.email = result.user.email;
+                     obj.score = 0;
+                     obj.category = "None";
+                     for (i = 0; i < users.length; i++) {
+                         if (result.user.email == users[i].email) {
+                             flaguser = false;
+                         }
+                     }
+                     if (flaguser)
+                         users.$add(obj);
+                     console.log(users);
+                     $state.go('app.welcome');
+
+                 })
+                 .catch(function(error) {
+                     console.error("Authentication failed:", error);
+                 });*/
         }
 
     })
@@ -230,7 +252,7 @@ quizing
         var game = this;
         var genreArray = firebase.database().ref('lists');
         game.genre = $firebaseArray(genreArray);
-        // console.log(game.genre);
+
         game.click = function(name) {
             console.log(name);
             $state.go('app.gameWelcome', { 'index': name });
@@ -240,7 +262,8 @@ quizing
     .controller("launchCtrl", function($state, userData, $stateParams) {
         this.userName = userData.userName;
         this.imageUrl = userData.img;
-        console.log($stateParams);
+        // console.log($stateParams);
+        // console.log(userData);
 
         this.name = $stateParams.index;
         this.click = function() {
@@ -250,14 +273,14 @@ quizing
         }
 
     })
-    .controller('gamePlayCtrl', function($state, userData, $stateParams, result, $interval) {
+    .controller('gamePlayCtrl', function($state, userData, $stateParams, result, $interval, score) {
         var play = this;
         var count = 0;
         play.score = 0;
-        var timer = 90;
+        var timer = score;
         var minutes = 0;
         var sec = 0;
-        var reset=1000;
+        var reset = 1000;
         play.logo = $stateParams.logo;
         play.name = $stateParams.genre;
         play.userName = userData.userName;
@@ -296,21 +319,23 @@ quizing
         }
         var stop = $interval(function() {
             timer--;
-            if (timer >= 60) 
-            minutes = 1;
+            if (timer >= 60)
+                minutes = 1;
             else minutes = 0;
-            if (timer % 60 < 10) 
-            sec = "0" + (timer % 60);
-            else 
-            sec = timer % 60;
+            if (timer % 60 < 10)
+                sec = "0" + (timer % 60);
+            else
+                sec = timer % 60;
 
             play.time = "0" + minutes + ":" + sec;
             if (timer == 0) {
                 $interval.cancel(stop);
+
                 $state.go('endGame', { 'score': play.score, 'genre': play.name });
-                
+
             }
         }, 1000)
+        console.log("stop", stop)
         var nextQuestion = function() {
             play.clickStatus = false;
             op = [];
