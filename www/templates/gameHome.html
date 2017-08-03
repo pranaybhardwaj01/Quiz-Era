@@ -1,10 +1,23 @@
 <ion-view view-title='Quiz Era'>
 
 
-    <ion-content class="has-header style2">
+    <ion-content class="has-header style4">
         <div class="row responsive-sm">
             <span ng-repeat=" genre in game.genre">
-            <a class="button button-calm"  style='margin:5px;border-radius:5px;width :150px ;height:80px; align-content:center' ng-click="game.click(genre.name)">{{genre.name}}</a>
+     <div class="card">
+  <div class="item item-divider">
+      <div align="center">
+    <h2>{{genre.name}}</h2>
+    </div>
+  </div>
+  <div class="item item-text-wrap">
+  <img src="img/friends.png" alt="genre picture" style="width:150px" align="middle"></img>
+
+  </div>
+  <div class="item item-divider" align="center">
+       <a class="button button-calm"  style='margin:5px;border-radius:5px;width :100px ;height:30px; align-content:center' ng-click="game.click(genre.name)">Play</a>
+  </div>
+</div>
 </span>
         </div>
     </ion-content>
