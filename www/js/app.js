@@ -195,7 +195,12 @@ quizing
 
             // var promise = auth.$signInWithPopup("google");
 
+document.addEventListener('deviceready', deviceReady, false);
 
+function deviceReady() {
+    //I get called when everything's ready for the plugin to be called!
+    console.log('Device is ready!');
+    alert('device is ready');
             window.plugins.googleplus.trySilentLogin({
                     'scopes': '... ', // optional, space-separated list of scopes, If not included or empty, defaults to `profile` and `email`.
                     'webClientId': "755619707190-c9lif41gr6rcjnho5i0f9hdb8bgfrk86.apps.googleusercontent.com", // optional clientId of your Web application from Credentials settings of your project - On Android, this MUST be included to get an idToken. On iOS, it is not required.
@@ -207,7 +212,7 @@ quizing
                 function(msg) {
                     alert('error: ' + msg);
                 }
-            );
+            );}
 
             /* promise.then(function(result) {
                      flaguser = true;
