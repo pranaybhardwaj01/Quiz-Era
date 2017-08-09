@@ -50,7 +50,8 @@ quizing
                 url: '/login',
 
                 templateUrl: 'templates/login.html',
-                controller: 'quizCtrl'
+                controller: 'quizCtrl',
+                controllerAs: 'quiz'
 
             })
             .state('signup', {
@@ -184,6 +185,8 @@ quizing
                     console.log(firebaseUser);
                     userData.userName = firebaseUser.displayName;
                     userData.img = firebaseUser.photoURL;
+                    quiz.signInEmail="";
+               quiz.signInPassword="";
                     $state.go("app.welcome");
                 }).catch(function(error) {
                     console.error("Authentication failed:", error);
