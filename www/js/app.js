@@ -189,7 +189,15 @@ quizing
                     console.error("Authentication failed:", error);
                 });
         }
-
+       quiz.logout = function(){
+           console.log('hie')
+           firebase.auth().signOut().then(function() {
+        $state.go("login")
+        alert("logged Out");
+         }).catch(function(error) {
+          console.log(error);
+            });
+       }
 
         function loginwithgoogle($location) {
 
@@ -257,7 +265,6 @@ function deviceReady() {
         var game = this;
         var genreArray = firebase.database().ref('lists');
         game.genre = $firebaseArray(genreArray);
-
         game.click = function(name) {
             console.log(name);
             $state.go('app.gameWelcome', { 'index': name });
