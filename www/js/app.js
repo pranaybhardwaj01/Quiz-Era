@@ -268,16 +268,18 @@ function deviceReady() {
         var game = this;
         var genreArray = firebase.database().ref('lists');
         game.genre = $firebaseArray(genreArray);
-        game.click = function(name) {
+        game.click = function(name,img) {
             console.log(name);
-            $state.go('app.gameWelcome', { 'index': name });
+            console.log(img);
+            $state.go('app.gameWelcome',{'index': name , 'anotherKey': img });
         }
 
     })
-    .controller("launchCtrl", function($state, userData, $stateParams) {
+    .controller("launchCtrl", function($firebaseArray,$state, userData, $stateParams) {
         this.userName = userData.userName;
         this.imageUrl = userData.img;
-        // console.log($stateParams);
+         console.log($stateParams);
+         this.img=$stateParams.anotherKey;
         // console.log(userData);
 
         this.name = $stateParams.index;
