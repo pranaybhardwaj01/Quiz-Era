@@ -147,7 +147,9 @@ quizing
         quiz.gosignUp = function() {
             $state.go('signup');
         }
-
+       quiz.welcome = function(){
+           $state.go('app.welcome');
+       }
         quiz.signUp = function() {
             auth.$createUserWithEmailAndPassword(quiz.signUpEmail, quiz.signUpPassword)
                 .then(function(firebaseUser) {
