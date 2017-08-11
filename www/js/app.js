@@ -205,10 +205,20 @@ quizing
        }
 
         function loginwithgoogle($location) {
+ window.plugins.googleplus.login(
+      {},
+      function (user_data) {
+        // For the purpose of this example I will store user data on local storage
+        
+        alert(user_data);
+        },
+    function (err)
+    {alert(err);}
+ )
 
             // var promise = auth.$signInWithPopup("google");
 
-document.addEventListener('deviceready', deviceReady, false);
+/*document.addEventListener('deviceready', deviceReady, false);
 
 function deviceReady() {
     //I get called when everything's ready for the plugin to be called!
@@ -227,7 +237,7 @@ function deviceReady() {
                 }
             );}
 
-            /* promise.then(function(result) {
+             promise.then(function(result) {
                      flaguser = true;
                      userData.userName = result.user.displayName;
                      userData.img = result.user.photoURL;
@@ -251,7 +261,7 @@ function deviceReady() {
                  .catch(function(error) {
                      console.error("Authentication failed:", error);
                  });*/
-        }
+      }
 
     })
     .controller("welcomeCtrl", function(userData, $state) {

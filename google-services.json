@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "755619707190-aii048337pq2gn762l5b09b90p7cac8j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.quiz.era",
+            "certificate_hash": "ac8ab7c87d3a2e79147958a5ca9879f52c25d162"
+          }
+        },
+        {
           "client_id": "755619707190-c9lif41gr6rcjnho5i0f9hdb8bgfrk86.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
