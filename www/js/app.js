@@ -1,10 +1,8 @@
 // Ionic Starter App
-
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 var starter = angular.module('starter', ['ionic'])
-
 
 starter
 
@@ -15,9 +13,6 @@ starter
             // for form inputs)
             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
 
-            // Don't remove this line unless you know what you are doing. It stops the viewport
-            // from snapping when text inputs are focused. Ionic handles this internally for
-            // a much nicer keyboard experience.
             cordova.plugins.Keyboard.disableScroll(true);
         }
         if (window.StatusBar) {
@@ -30,10 +25,6 @@ starter
 
 });
 
-// Ionic uses AngularUI Router which uses the concept of states
-// Learn more here: https://github.com/angular-ui/ui-router
-// Set up the various states which the app can be in.
-// Each state's controller can be found in controllers.js
 var timer;
 var quizing = angular.module("Quiz", ["firebase", "starter"]);
 quizing
@@ -205,11 +196,12 @@ quizing
        }
 
         function loginwithgoogle($location) {
- window.plugins.googleplus.login(
+ 
+     window.plugins.googleplus.login(
       {},
       function (user_data) {
         // For the purpose of this example I will store user data on local storage
-        
+        console.log(user_data);
         alert(user_data);
         },
     function (err)
@@ -281,8 +273,6 @@ function deviceReady() {
         var genreArray = firebase.database().ref('lists');
         game.genre = $firebaseArray(genreArray);
         game.click = function(name,img) {
-            console.log(name);
-            console.log(img);
             $state.go('app.gameWelcome',{'index': name , 'anotherKey': img });
         }
 
@@ -296,8 +286,6 @@ function deviceReady() {
 
         this.name = $stateParams.index;
         this.click = function() {
-
-
             $state.go('game', { 'genre': this.name });
         }
 
