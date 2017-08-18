@@ -1,30 +1,42 @@
 // Ionic Starter App
+
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 var starter = angular.module('starter', ['ionic'])
 
+
 starter
 
     .run(function($ionicPlatform) {
-    $ionicPlatform.ready(function() {
+    $ionicPlatform.ready(function($function) {
         if (window.cordova && window.cordova.plugins.Keyboard) {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
 
+            // Don't remove this line unless you know what you are doing. It stops the viewport
+            // from snapping when text inputs are focused. Ionic handles this internally for
+            // a much nicer keyboard experience.
             cordova.plugins.Keyboard.disableScroll(true);
         }
         if (window.StatusBar) {
             StatusBar.styleDefault();
         }
         $ionicPlatform.registerBackButtonAction(function(event) {
-            event.preventDefault();
+            if ($state.current.name == 'game' || $state.current.name == 'endGame')
+                event.preventDefault();
+            else
+                navigator.app.backHistory();
         }, 100);
     });
 
 });
 
+// Ionic uses AngularUI Router which uses the concept of states
+// Learn more here: https://github.com/angular-ui/ui-router
+// Set up the various states which the app can be in.
+// Each state's controller can be found in controllers.js
 var timer;
 var quizing = angular.module("Quiz", ["firebase", "starter"]);
 quizing
@@ -65,6 +77,7 @@ quizing
                             templateUrl: 'templates/welcome.html',
                             controller: 'welcomeCtrl',
                             controllerAs: 'welcome'
+
                         }
                     }
                 }
@@ -138,9 +151,9 @@ quizing
         quiz.gosignUp = function() {
             $state.go('signup');
         }
-       quiz.welcome = function(){
-           $state.go('app.welcome');
-       }
+        quiz.welcome = function() {
+            $state.go('app.welcome');
+        }
         quiz.signUp = function() {
             auth.$createUserWithEmailAndPassword(quiz.signUpEmail, quiz.signUpPassword)
                 .then(function(firebaseUser) {
@@ -175,88 +188,64 @@ quizing
             console.log("signIN");
             promise
                 .then(function(firebaseUser) {
-                    console.log(firebaseUser);
+                    //  console.log(firebaseUser);
                     userData.userName = firebaseUser.displayName;
                     userData.img = firebaseUser.photoURL;
-                    quiz.signInEmail="";
-               quiz.signInPassword="";
+                    quiz.signInEmail = "";
+                    quiz.signInPassword = "";
+                    userData.email = firebaseUser.email;
+                    //console.log(userData.email);
                     $state.go("app.welcome");
                 }).catch(function(error) {
-                    console.error("Authentication failed:", error);
+                    quiz.signInPassword = "";
+                    switch (error.code) {
+                        case "auth/invalid-email":
+                            alert("Please Enter correct Email.")
+
+                            break;
+                        case "auth/wrong-password":
+                            alert("INCORRECT Password,");
+                            break;
+
+                        default:
+                            alert(error.message);
+                            break;
+                    }
                 });
         }
-       quiz.logout = function(){
-           console.log('hie')
-           firebase.auth().signOut().then(function() {
-        $state.go("login")
-        alert("logged Out");
-         }).catch(function(error) {
-          console.log(error);
+        quiz.logout = function() {
+
+            firebase.auth().signOut().then(function() {
+                $state.go("login")
+                alert("logged Out");
+            }).catch(function(error) {
+                console.log(error);
             });
-       }
+        }
 
         function loginwithgoogle($location) {
- 
-     window.plugins.googleplus.login(
-      {},
-      function (user_data) {
-        // For the purpose of this example I will store user data on local storage
-        console.log(user_data);
-        alert(user_data);
-        },
-    function (err)
-    {alert(err);}
- )
 
-            // var promise = auth.$signInWithPopup("google");
-
-/*document.addEventListener('deviceready', deviceReady, false);
-
-function deviceReady() {
-    //I get called when everything's ready for the plugin to be called!
-    console.log('Device is ready!');
-    alert('device is ready');
-            window.plugins.googleplus.trySilentLogin({
-                    'scopes': '... ', // optional, space-separated list of scopes, If not included or empty, defaults to `profile` and `email`.
-                    'webClientId': "755619707190-c9lif41gr6rcjnho5i0f9hdb8bgfrk86.apps.googleusercontent.com", // optional clientId of your Web application from Credentials settings of your project - On Android, this MUST be included to get an idToken. On iOS, it is not required.
-                    'offline': true, // optional, but requires the webClientId - if set to true the plugin will also return a serverAuthCode, which can be used to grant offline access to a non-Google server
+            window.plugins.googleplus.login({
+                    'scopes': 'https://www.googleapis.com/auth/plus.me',
+                    'webClientid': '755619707190-ssr3kq812c6jrmn24igtma85cfiagl0p.apps.googleusercontent.com',
+                    'offline': true,
                 },
-                function(obj) {
-                    console.log(obj); // do something useful instead of alerting
+                function(user_data) {
+
+                    userData.userName = user_data.displayName;
+                    userData.email = user_data.email;
+                    userData.img = "http://thejonathanfoundation.org/portals/0/GenericProfile.png";
+                    $state.go("app.welcome");
+
                 },
-                function(msg) {
-                    alert('error: ' + msg);
-                }
-            );}
+                function(err) { alert(err); }
+            )
 
-             promise.then(function(result) {
-                     flaguser = true;
-                     userData.userName = result.user.displayName;
-                     userData.img = result.user.photoURL;
-                     var obj = {};
-                     obj.name = result.user.displayName;
-                     obj.img = result.user.photoURL;
-                     obj.email = result.user.email;
-                     obj.score = 0;
-                     obj.category = "None";
-                     for (i = 0; i < users.length; i++) {
-                         if (result.user.email == users[i].email) {
-                             flaguser = false;
-                         }
-                     }
-                     if (flaguser)
-                         users.$add(obj);
-                     console.log(users);
-                     $state.go('app.welcome');
 
-                 })
-                 .catch(function(error) {
-                     console.error("Authentication failed:", error);
-                 });*/
-      }
+        }
 
     })
-    .controller("welcomeCtrl", function(userData, $state) {
+    .controller("welcomeCtrl", function(userData, $state, $firebaseAuth) {
 
         this.displayName = userData.userName;
         this.imageURL = userData.img;
@@ -272,16 +261,16 @@ function deviceReady() {
         var game = this;
         var genreArray = firebase.database().ref('lists');
         game.genre = $firebaseArray(genreArray);
-        game.click = function(name,img) {
-            $state.go('app.gameWelcome',{'index': name , 'anotherKey': img });
+        game.click = function(name, img) {
+            $state.go('app.gameWelcome', { 'index': name, 'anotherKey': img });
         }
 
     })
-    .controller("launchCtrl", function($firebaseArray,$state, userData, $stateParams) {
+    .controller("launchCtrl", function($firebaseArray, $state, userData, $stateParams) {
         this.userName = userData.userName;
         this.imageUrl = userData.img;
-         console.log($stateParams);
-         this.img=$stateParams.anotherKey;
+        console.log($stateParams);
+        this.img = $stateParams.anotherKey;
         // console.log(userData);
 
         this.name = $stateParams.index;
@@ -290,7 +279,7 @@ function deviceReady() {
         }
 
     })
-    .controller('gamePlayCtrl', function($state, userData, $stateParams, result, $interval, score) {
+    .controller('gamePlayCtrl', function($state, userData, $stateParams, $firebaseArray, $interval, score, result) {
         var play = this;
         var count = 0;
         play.score = 0;
@@ -298,6 +287,15 @@ function deviceReady() {
         var minutes = 0;
         var sec = 0;
         var reset = 1000;
+        var userref = firebase.database().ref("Users");
+        var users = $firebaseArray(userref);
+        var currUser = null;
+        users.$loaded().then(function(users) {
+            for (var index = 0; index < users.length; index++)
+                if (users[index].email == userData.email)
+                    currUser = index;
+        })
+
         play.logo = $stateParams.logo;
         play.name = $stateParams.genre;
         play.userName = userData.userName;
@@ -329,8 +327,12 @@ function deviceReady() {
             else
                 $interval(function() {
                     $interval.cancel(stop);
-
-                    $state.go('endGame', { 'score': play.score, 'genre': play.name });
+                    if (users[currUser].score < score) {
+                        users[currUser].score = play.score;
+                        users[currUser].category = play.name;
+                        users.$save(currUser).then(function(ref) {}, function(err) { alert("No internet connection,Data CANNOT BE SAVED. ") });
+                    }
+                    $state.go('endGame', { 'score': play.score, 'genre': play.name })
                 }, 1000, 1);
 
         }
@@ -347,7 +349,12 @@ function deviceReady() {
             play.time = "0" + minutes + ":" + sec;
             if (timer == 0) {
                 $interval.cancel(stop);
+                if (users[currUser].score < score) {
+                    users[currUser].score = play.score;
+                    users[currUser].category = play.name;
+                    users.$save(currUser).then(function(ref) {}, function(err) { alert("No internet connection,Data CANNOT BE SAVED. ") });
 
+                }
                 $state.go('endGame', { 'score': play.score, 'genre': play.name });
 
             }
@@ -372,10 +379,13 @@ function deviceReady() {
         }
 
     })
-    .controller('endCtrl', function($stateParams, $state) {
+    .controller('endCtrl', function($stateParams, $state, $firebaseArray) {
         var end = this;
         end.score = $stateParams.score;
         end.genre = $stateParams.genre;
+        var userref = firebase.database().ref("Users");
+        var users = $firebaseArray(userref);
+
         end.gameSelect = function() {
             $state.go('app.gameHome');
         }
