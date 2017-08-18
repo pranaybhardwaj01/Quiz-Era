@@ -327,7 +327,7 @@ quizing
             else
                 $interval(function() {
                     $interval.cancel(stop);
-                    if (users[currUser].score < score) {
+                    if (users[currUser].score < play.score) {
                         users[currUser].score = play.score;
                         users[currUser].category = play.name;
                         users.$save(currUser).then(function(ref) {}, function(err) { alert("No internet connection,Data CANNOT BE SAVED. ") });
