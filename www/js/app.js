@@ -17,7 +17,7 @@ starter
             StatusBar.styleDefault();
         }
         $ionicPlatform.registerBackButtonAction(function(event) {
-            if ($state.current.name == 'game' || $state.current.name == 'endGame')
+            if ($state.$current.name == 'game' || $state.$current.name == 'endGame')
                 event.preventDefault();
             else
                 navigator.app.backHistory();
@@ -26,10 +26,7 @@ starter
 
 });
 
-// Ionic uses AngularUI Router which uses the concept of states
-// Learn more here: https://github.com/angular-ui/ui-router
-// Set up the various states which the app can be in.
-// Each state's controller can be found in controllers.js
+
 var timer;
 var quizing = angular.module("Quiz", ["firebase", "starter"]);
 quizing
